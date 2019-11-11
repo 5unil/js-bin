@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+<head>
+ 	<title>JS Bin</title>
+
+ 	<meta charset="utf-8" />
+ 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+ 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+ 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+ 	<style>
+
+ 		body {
+ 			font-family: Avenir;
+ 			margin:0;
+ 			padding:0;
+ 		}
+
+ 		#topbar {
+ 			height:40px;
+ 			width:100%;
+ 			background-color:#EDEDED;
+ 			border-bottom: 1px solid grey;
+ 		}
+
+ 		ul {
+ 			float:right;
+ 			margin: 0;
+ 		}
+
+ 		li {
+ 			padding: 9px 15px 9px 15px;
+ 			list-style: none;
+ 			float:left;
+ 			border-left: 1px solid grey;
+ 		}
+
+ 		#codeplayer {
+ 			padding: 9px 15px 9px 10px;
+ 			float:left;
+ 			font-weight:bold;
+ 			color:green;
+ 		}
+
+ 		.codeContainer {
+ 			width:50%;
+ 			float:left;
+			box-sizing: border-box;
+			border-right:1px solid grey;
+ 		}
+
+ 		.clear {
+ 			clear:both;
+ 		}
+
+ 		.codeContainer textarea {
+ 			box-sizing: border-box;
+ 			margin-bottom:-4px;
+ 			display:block;
+ 			width:100%;
+ 			font-size:14px;
+ 			font-family:courier;
+ 			background-color:transparent;
+ 			outline:none;
+ 			resize:none;
+ 			border:none;
+ 			padding-left: 10px;
+ 		}
+
+ 		.codeTitle {
+ 			font-weight:bold;
+ 			padding:10px;
+ 		}
+
+
+ 		#ConsoleContainer, #CSSContainer, #JavaScriptContainer {
+ 			display:none;
+ 		}
+
+ 		iframe {
+ 			width:100%;
+ 			box-sizing: border-box;
+ 			margin-bottom:-4px;
+ 			display:block;
+ 			border:none;
+ 		}
+
+ 		.selected {
+
+ 			background-color:grey;
+ 		}
+
+ 		button {
+
+ 			top:15px;
+ 			right:15px;
+ 			position:absolute;
+ 			font-size:16px;
+ 			font-family:Avenir;
+ 		}
+
+ 		#OutputContainer {
+
+ 			position:relative;
+ 		}
+
+ 	</style>
+
+</head>
+
+<body>
+
+	<div id="container">
+
+		<div id="topbar">
+
+			<div id="codeplayer">Codeplayer</div>
+
+			<ul id="link">
+				<li class="selected">HTML</li>
+				<li>CSS</li>
+				<li>JavaScript</li>
+				<li>Console</li>
+				<li class="selected">Output</li>
+			</ul>
+
+		</div>
+
+		<div class="clear"></div>
+
+		<div id="HTMLContainer" class="codeContainer">
+			
+			<div class="codeTitle">HTML</div>
+
+			<textarea id="htmlCode"></textarea>
+
+		</div>
+
+
+		<div id="CSSContainer" class="codeContainer">
+
+			<div class="codeTitle">CSS</div>
+
+			<textarea id="cssCode"></textarea>
+
+		</div>
+
+
+		<div id="JavaScriptContainer" class="codeContainer">
+
+			<div class="codeTitle">JavaScript</div>
+
+			<textarea id="jsCode"></textarea>
+
+		</div>
+
+
+		<div id="ConsoleContainer" class="codeContainer">
+
+			<div class="codeTitle">Console</div>
+
+			<textarea id="consoleCode"></textarea>
+
+		</div>
+
+
+		<div id="OutputContainer" class="codeContainer">
+
+			<div class="codeTitle">Output</div>
+
+			<button>Run</button>
+
+			<iframe id='test'></iframe>
+
+		</div>
+
+	</div>
+
+
+	<script>
+
+		var windowHeight = $(window).height(),
+			menuBar = $("#topbar").height(),
+			codeTitleHeight = $(".codeTitle:visible").outerHeight();
+
+		$(".codeContainer").height(windowHeight-menuBar+"px");
+
+		var codeContainerHeight = windowHeight-menuBar;
+
+		$("textarea").outerHeight(codeContainerHeight-codeTitleHeight+"px");
+		$("iframe").outerHeight(codeContainerHeight-codeTitleHeight+"px");
+
+
+		$("li").click(function() {
+
+			$(this).toggleClass("selected");
+
+			var divSelected = $(this).html();
+
+			$("#" + divSelected +"Container").toggle();
+
+			var showingDivs = $(".codeContainer").filter(function() {
+
+				return $(this).css("display")!="none";
+
+			}).length;
+
+			$(".codeContainer").css("width",100/showingDivs + "%");
+		})
+
+		$("button").click(function() {
+
+			$("iframe").contents().find("html").html("<style>"+$("#cssCode").val()+"</style>"+$("#htmlCode").val());
+
+			document.getElementById("test").contentWindow.eval($("#jsCode").val())
+		})
+
+	</script>
+
+</body>
+</html>
